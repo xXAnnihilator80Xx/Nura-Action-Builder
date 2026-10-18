@@ -1,0 +1,154 @@
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+	description: 'Release channel for Nura (note that some devices may only be available in edge).'
+	required: true
+	type: choice
+	default: edge
+	options:
+	  - edge
+	  - latest_stable
+
+      target_device:
+	description: 'Name of target device (in vendor-codename format, lowercase only).'
+	required: true
+	type: string
+
+      hostname:
+	description: 'Hostname for the generated image (defaults to target device name).'
+	required: true
+	type: string
+	default: $[{ target_device }]
+
+      locale:
+	description: 'Locale for the generated image (defaults to "en_US").'
+	required: true
+	type: string
+	default: 'en_US.UTF-8'
+
+      timezone:
+	description: 'Timezone for generated image (defaults to GMT).'
+	required: true
+	type: string
+	default: 'GMT'
+      # TODO: ^
+
+
+      extra_packages:
+	description: 'Comma-separated list of optional extra packages to install (leave empty for none).'
+	required: false
+	type: string
+
+      extra_free_space:
+	description: 'Extra free space for the generated image in MBs (usually no need to change this, defaults to 0).'
+	required: false
+	type: number
+
+      audio_backend_provider:
+        description: 'Audio backend provider. Select from pulseaudio or pipewire (worse compatibility).'
+	required: true
+	type: choice
+	default: pulseaudio
+	options:
+	  - pulseaudio
+	  - pipewire
+
+      wifi_backend_provider:
+	description: 'Wi-Fi backend provider. Select from wpa_supplicant or iwd (worse compatibility).'
+	required: true
+	type: choice
+	default: wpa_supplicant
+	options:
+	  - wpa_supplicant
+	  - iwd
+
+      disable_usb_networking:
+	description: 'Disable USB networking? (Not recommended!)'
+	required: true
+	type: boolean
+	default: false
+
+      username:
+        description: 'Username for the generated image (defaults to "user").'
+        required: true
+        type: string
+        default: 'user'
+
+      password:
+	description: 'Password for the user (defaults to "147147").'
+	required: true
+	type: string
+	default: '147147'
+
+     interface:
+	description: 'Interface (UI) for generated image (please ensure compatibility with the target device first!).'
+	required: true
+	type: choice
+	options:
+	  - none
+          - buffyboard
+	  - cage
+	  - console
+	  - cosmic
+	  - fbkeyboard
+	  - gnome
+	  - gnome-mobile
+	  - i3wm
+	  - kodi
+	  - lxqt
+	  - moonlight
+	  - niri
+	  - openbox
+	  - os-installer
+	  - phosh
+	  - plasma-bigscreen
+	  - plasma-desktop
+	  - plasma-mobile
+	  - retroarch
+	  - sway
+	  - sxmo-de-dwm
+	  - sxmo-de-i3
+	  - sxmo-de-river
+	  - sxmo-de-sway
+	  - weston
+	  - xfce4
+
+     init_system:
+	description: 'Choose from OpenRC or SystemD (please ensure compatibility with chosen interface!).'
+	required: true
+	type: choice
+	options:
+	  - openrc
+	  - systemd
+
+     boot_size:
+        description: 'Boot partition size in MBs (leave empty for default of 512 MB).'
+        required: true
+	type: number
+	default: 512	
+
+     extra_opts:
+	desctiption: 'Optionally pass extra arguments to `pmbootstrap install`'
+	required: false
+	type: string
+      
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+	with:
+	  repository: 'postmarketOS/pmaports'
+	  github-server-url: 'https://gitlab.postmarketos.org'
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
