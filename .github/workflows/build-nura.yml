@@ -24,7 +24,7 @@ on:
         description: 'Locale for the generated image (defaults to "en_US").'
         required: true
         type: string
-        default: 'en_US.UTF-8'
+        default: 'en_US'
 
       timezone:
         description: 'Timezone (in IANA Region/City format) for generated image (defaults to GMT).'
@@ -147,11 +147,8 @@ jobs:
           cd $HOME/pmbootstrap
           pip install .
 
-      - name: Clone pmaports
-        run: |
-          mkdir -p ~/.local/var/pmbootstrap/cache_git
-          git clone https://gitlab.postmarketos.org/postmarketOS/pmaports.git \
-          $HOME/.local/var/pmbootstrap/cache_git/pmaports/
+      - name: Clone pmaports and run initial config
+        run: yes "" | pmbootstrap init --shallow-initial-clone
 
       - name: Sets configuration options
         run: |
