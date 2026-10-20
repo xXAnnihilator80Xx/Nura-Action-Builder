@@ -28,12 +28,10 @@ on:
         default: 'en_US.UTF-8'
 
       timezone:
-        description: 'Timezone for generated image (defaults to GMT).'
+        description: 'Timezone (in IANA Region/City format) for generated image (defaults to GMT).'
         required: true
         type: string
         default: 'GMT'
-      # TODO: ^
-
 
       extra_packages:
         description: 'Comma-separated list of optional extra packages to install (leave empty for none).'
@@ -122,11 +120,16 @@ on:
           - openrc
           - systemd
 
-      boot_size:
+      boot_partition_size:
         description: 'Boot partition size in MBs (leave empty for default of 512 MB).'
         required: true
         type: number
         default: 512
+      
+      fde_password:
+        description: 'Password for FDE, if enabled (not the same as the first one!).'
+        required: false
+        type: string
 
       extra_opts:
         description: 'Optionally pass extra arguments to `pmbootstrap install`'
@@ -138,17 +141,39 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v7
-        with:
-          repository: 'postmarketOS/pmaports'
-          github-server-url: 'https://gitlab.postmarketos.org'
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Install pmbootstrap
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          git clone --depth 1 https://gitlab.postmarketos.org/postmarketOS/pmbootstrap \
+          $HOME/pmbootstrap
+          cd $HOME/pmbootstrap
+          pip install .
+
+      - name: Clone pmaports
+        run: |
+          mkdir -p ~/.local/var/pmbootstrap/cache_git
+          git clone https://gitlab.postmarketos.org/postmarketOS/pmaports.git \
+          $HOME/.local/var/pmbootstrap/cache_git/pmaports/
+
+      - name: Sets configuration options
+        run: |
+          pmbootstrap config work $HOME/.local/var/pmbootstrap
+          pmbootstrap config pmaports $HOME/.local/var/pmbootstrap/cache_git/pmaports
+          pmbootstrap config device ${{ inputs.target_device }}
+          pmbootstrap config user ${{ inputs.username }}
+          # TODO: _three_ variables wrapped together in a single key? not great :v
+          #pmbootstrap config providers 
+          pmbootstrap config ui ${{ inputs.interface }}
+          pmbootstrap config service_manager ${{ inputs.init_system }}
+          pmbootstrap config extra_packages ${{ inputs.extra_packages }}
+          pmbootstrap config timezone ${{ inputs.timezone }}
+          pmbootstrap config locale ${{ inputs.locale }}
+
+      - name: Build Nura with pmbootstrap
+        env: 
+          PMB_FDE_PASSWORD: ${{ inputs.fde_password }}
+        run: pmbootstrap install --password ${{ inputs.password }} ${{ inputs.extra_opts }}
+
+      - name: TEMPORARY PROBE
+        run: |
+          pmbootstrap export $PWD/pmbootstrap_export
+          find pmbootstrap_export
