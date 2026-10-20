@@ -19,7 +19,6 @@ on:
         description: 'Hostname for the generated image (defaults to target device name).'
         required: true
         type: string
-        default: $[{ target_device }]
 
       locale:
         description: 'Locale for the generated image (defaults to "en_US").'
@@ -167,6 +166,7 @@ jobs:
           pmbootstrap config extra_packages ${{ inputs.extra_packages }}
           pmbootstrap config timezone ${{ inputs.timezone }}
           pmbootstrap config locale ${{ inputs.locale }}
+          pmbootstrap config hostname ${{ inputs.hostname || inputs.device }}
 
       - name: Build Nura with pmbootstrap
         env: 
