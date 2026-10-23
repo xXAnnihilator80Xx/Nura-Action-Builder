@@ -183,5 +183,5 @@ jobs:
         run: |
           set -e
           wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
-          bash upload.sh pmbootstrap_export/*
+          bash upload.sh $(find pmbootstrap_export)
           
