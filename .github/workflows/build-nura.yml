@@ -170,7 +170,17 @@ jobs:
           PMB_FDE_PASSWORD: ${{ inputs.fde_password }}
         run: pmbootstrap install --password ${{ inputs.password }} ${{ inputs.extra_opts }}
 
-      - name: TEMPORARY PROBE
+      - name: Prepare for Release
         run: |
           pmbootstrap export $PWD/pmbootstrap_export
-          find pmbootstrap_export
+
+      - name: Upload to Releases
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
+          bash upload.sh pmbootstrap_export/*
+        uses: JasonEtco/upload-to-release@master
+        with:
+          
