@@ -176,7 +176,7 @@ jobs:
       - name: Prepare for Release
         run: |
           pmbootstrap export $PWD/pmbootstrap_export
-          tar -J -h -c -f nura-$(date +%F)-$TARGET_DEVICE.tar.xz
+          tar -J -h -c -f nura-$(date +%F)-$TARGET_DEVICE.tar.xz pmbootstrap_export/*
 
       - name: Upload to Releases
         env:
