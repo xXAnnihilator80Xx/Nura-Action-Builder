@@ -163,7 +163,7 @@ jobs:
           pmbootstrap config extra_packages ${{ inputs.extra_packages }}
           pmbootstrap config timezone ${{ inputs.timezone }}
           pmbootstrap config locale ${{ inputs.locale }}
-          pmbootstrap config hostname ${{ inputs.hostname || inputs.device }}
+          pmbootstrap config hostname ${{ inputs.hostname || inputs.target_device }}
 
       - name: Build Nura with pmbootstrap
         env: 
@@ -181,6 +181,4 @@ jobs:
           set -e
           wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
           bash upload.sh pmbootstrap_export/*
-        uses: JasonEtco/upload-to-release@master
-        with:
           
