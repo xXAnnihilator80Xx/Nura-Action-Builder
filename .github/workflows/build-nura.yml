@@ -176,6 +176,7 @@ jobs:
       - name: Prepare for Release
         run: |
           pmbootstrap export $PWD/pmbootstrap_export
+          tar -J -h -c -f nura-$(date +%F)-$TARGET_DEVICE.tar.xz
 
       - name: Upload to Releases
         env:
@@ -183,5 +184,5 @@ jobs:
         run: |
           set -e
           wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
-          bash upload.sh $(find pmbootstrap_export)
+          bash upload.sh nura-*.tar.xz
           
