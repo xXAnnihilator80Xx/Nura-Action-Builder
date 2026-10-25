@@ -186,5 +186,5 @@ jobs:
         run: |
           set -e
           wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
-          bash upload.sh nura-*.tar.xz
+          bash upload.sh nura-*.tar.xz $(find -L $PWD/pmbootstrap_export)
           
