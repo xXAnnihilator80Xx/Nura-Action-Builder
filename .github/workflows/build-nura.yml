@@ -182,9 +182,11 @@ jobs:
 
       - name: Upload to Releases
         env:
+          TARGET_DEVICE: ${{ inputs.target_device }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -e
           wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
-          bash upload.sh nura-*.tar.xz $(find -L $PWD/pmbootstrap_export)
+          bash upload.sh nura-*.tar.xz $(find -L $PWD/pmbootstrap_export) \
+            $PWD/pmbootstrap_export/$TARGET_DEVICE.img
           
