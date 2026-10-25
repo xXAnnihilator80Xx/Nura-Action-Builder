@@ -4,15 +4,6 @@ permissions:
 on:
   workflow_dispatch:
     inputs:
-      channel:
-        description: 'Release channel for Nura (note that some devices may only be available in edge).'
-        required: true
-        type: choice
-        default: edge
-        options:
-          - edge
-          - latest_stable
-
       target_device:
         description: 'Name of target device (in vendor-codename format, lowercase only).'
         required: true
@@ -167,6 +158,8 @@ jobs:
           pmbootstrap config timezone ${{ inputs.timezone }}
           pmbootstrap config locale ${{ inputs.locale }}
           pmbootstrap config hostname ${{ inputs.hostname || inputs.target_device }}
+          pmbootstrap config extra_space ${{ inputs.extra_free_space }}
+          pmbootstrap config boot_size ${{ inputs.boot_partition_size }}
 
       - name: Build Nura with pmbootstrap
         env: 
