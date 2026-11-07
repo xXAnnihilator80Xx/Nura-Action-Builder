@@ -104,6 +104,7 @@ on:
           - sxmo-de-sway
           - weston
           - xfce4
+          - catacomb
 
       init_system:
         description: 'Choose from OpenRC or SystemD (please ensure compatibility with chosen interface!).'
