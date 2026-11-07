@@ -136,8 +136,7 @@ jobs:
     steps:
       - name: Install pmbootstrap
         run: |
-          git clone --depth 1 https://gitlab.postmarketos.org/postmarketOS/pmbootstrap \
-          $HOME/pmbootstrap
+          git clone --depth 1 https://gitlab.nura.eco/nura/pmbootstrap $HOME/pmbootstrap
           cd $HOME/pmbootstrap
           pip install .
 
