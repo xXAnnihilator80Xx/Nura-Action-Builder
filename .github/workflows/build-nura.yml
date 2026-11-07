@@ -120,7 +120,7 @@ on:
         default: 512
       
       fde_password:
-        description: 'Password for FDE, if enabled (not the same as the first one!).'
+        description: 'Password for FDE, if enabled (dont use the user login).'
         required: false
         type: string
 
@@ -154,7 +154,6 @@ jobs:
           #pmbootstrap config providers 
           pmbootstrap config ui ${{ inputs.interface }}
           pmbootstrap config service_manager ${{ inputs.init_system }}
-          pmbootstrap config extra_packages ${{ inputs.extra_packages }}
           pmbootstrap config timezone ${{ inputs.timezone }}
           pmbootstrap config locale ${{ inputs.locale }}
           pmbootstrap config hostname ${{ inputs.hostname || inputs.target_device }}
@@ -164,14 +163,16 @@ jobs:
       - name: Build Nura with pmbootstrap
         env: 
           PMB_FDE_PASSWORD: ${{ inputs.fde_password }}
-        run: pmbootstrap install --password ${{ inputs.password }} ${{ inputs.extra_opts }}
+        run: pmbootstrap install --password ${{ inputs.password }} \
+             --add ${{ inputs.extra_packages }} ${{ inputs.extra_opts }}
 
       - name: Prepare for Release
         env: 
           TARGET_DEVICE: ${{ inputs.target_device }}
+          INTERFACE: ${{ inputs.interface }}
         run: |
           pmbootstrap export $PWD/pmbootstrap_export
-          tar -J -h -c -v -f nura-$(date +%F)-$TARGET_DEVICE.tar.xz pmbootstrap_export/*
+          tar -J -h -c -v -f nura-$TARGET_DEVICE-$INTERFACE-$(date +%F).tar.xz pmbootstrap_export/*
 
       - name: Upload to Releases
         env:
