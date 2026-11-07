@@ -27,7 +27,7 @@ on:
         default: 'GMT'
 
       extra_packages:
-        description: 'Comma-separated list of optional extra packages to install (leave empty for none).'
+        description: 'Comma-separated list of extra packages to install (leave empty for none).'
         required: false
         type: string
 
