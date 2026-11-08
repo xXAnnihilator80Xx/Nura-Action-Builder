@@ -156,7 +156,7 @@ jobs:
           pmbootstrap config service_manager ${{ inputs.init_system }}
           pmbootstrap config timezone ${{ inputs.timezone }}
           pmbootstrap config locale ${{ inputs.locale }}
-          pnbootstrap config extra_packages ${{ inputs.extra_packages }}
+          pmbootstrap config extra_packages ${{ inputs.extra_packages }}
           pmbootstrap config hostname ${{ inputs.hostname || inputs.target_device }}
           pmbootstrap config extra_space ${{ inputs.extra_free_space }}
           pmbootstrap config boot_size ${{ inputs.boot_partition_size }}
