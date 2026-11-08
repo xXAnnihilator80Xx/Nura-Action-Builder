@@ -156,6 +156,7 @@ jobs:
           pmbootstrap config service_manager ${{ inputs.init_system }}
           pmbootstrap config timezone ${{ inputs.timezone }}
           pmbootstrap config locale ${{ inputs.locale }}
+          pnbootstrap config extra_packages ${{ inputs.extra_packages }}
           pmbootstrap config hostname ${{ inputs.hostname || inputs.target_device }}
           pmbootstrap config extra_space ${{ inputs.extra_free_space }}
           pmbootstrap config boot_size ${{ inputs.boot_partition_size }}
@@ -163,8 +164,7 @@ jobs:
       - name: Build Nura with pmbootstrap
         env: 
           PMB_FDE_PASSWORD: ${{ inputs.fde_password }}
-        run: pmbootstrap install --password ${{ inputs.password }} \
-             --add ${{ inputs.extra_packages }} ${{ inputs.extra_opts }}
+        run: pmbootstrap install --password ${{ inputs.password }} ${{ inputs.extra_opts }}
 
       - name: Prepare for Release
         env: 
